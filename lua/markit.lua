@@ -6,19 +6,23 @@ local picker = require('markit.picker')
 
 local M = {}
 
-function M.set()
-    local err, input = pcall(function()
-        return string.char(vim.fn.getchar())
-    end)
-    if not err then
-        return
+---@param mark_char string|nil
+function M.set(mark_char)
+    if mark_char == nil then
+        local err, input = pcall(function()
+            return string.char(vim.fn.getchar())
+        end)
+        if not err then
+            return
+        end
+        mark_char = input
     end
 
-    if utils.is_valid_mark(input) then
+    if utils.is_valid_mark(mark_char) then
         if not M.excluded_fts[vim.bo.ft] and not M.excluded_bts[vim.bo.bt] then
-            M.mark_state:place_mark_cursor(input)
+            M.mark_state:place_mark_cursor(mark_char)
         end
-        vim.cmd('normal! m' .. input)
+        vim.cmd('normal! m' .. mark_char)
     end
 end
 
@@ -34,31 +38,39 @@ function M.toggle()
     end
 end
 
-function M.toggle_mark()
-    local err, input = pcall(function()
-        return string.char(vim.fn.getchar())
-    end)
-    if not err then
-        return
+---@param mark_char string|nil
+function M.toggle_mark(mark_char)
+    if mark_char == nil then
+        local err, input = pcall(function()
+            return string.char(vim.fn.getchar())
+        end)
+        if not err then
+            return
+        end
+        mark_char = input
     end
 
-    if utils.is_valid_mark(input) then
+    if utils.is_valid_mark(mark_char) then
         if not M.excluded_fts[vim.bo.ft] then
-            M.mark_state:toggle_mark(input)
+            M.mark_state:toggle_mark(mark_char)
         end
     end
 end
 
-function M.delete()
-    local err, input = pcall(function()
-        return string.char(vim.fn.getchar())
-    end)
-    if not err then
-        return
+---@param mark_char string|nil
+function M.delete(mark_char)
+    if mark_char == nil then
+        local err, input = pcall(function()
+            return string.char(vim.fn.getchar())
+        end)
+        if not err then
+            return
+        end
+        mark_char = input
     end
 
-    if utils.is_valid_mark(input) then
-        M.mark_state:delete_mark(input)
+    if utils.is_valid_mark(mark_char) then
+        M.mark_state:delete_mark(mark_char)
         return
     end
 end
